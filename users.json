@@ -1,30 +1,37 @@
 [
   {
-    "name": "sjdhf",
-    "email": "sdjf@s.dfa",
-    "telp": "0898765432",
-    "role": "user",
-    "statusBoolean": false
-  },
-  {
-    "name": "sd",
-    "email": "fsd@sd.sd",
+    "name": "marw",
+    "email": "masmail.com",
     "telp": "089876543",
     "role": "admin",
-    "statusBoolean": false
+    "status": true
   },
   {
-    "name": "sdjhfa",
-    "email": "hdjska@sdfh.con",
-    "telp": "0834567898",
+    "name": "cep",
+    "email": "mas@mail.com",
+    "telp": "089876543",
     "role": "admin",
-    "statusBoolean": false
+    "status": true
   },
   {
-    "name": "jsdf",
-    "email": "shafj@sajk.usdgf",
-    "telp": "082345678",
+    "name": "mas",
+    "email": "mas@mail.com",
+    "telp": "089876543",
     "role": "admin",
-    "statusBoolean": false
+    "status": true
+  },
+  {
+    "name": "maraw",
+    "email": "mas@mail.com",
+    "telp": "089876543",
+    "role": "admin",
+    "status": true
+  },
+  {
+    "name": "sep",
+    "email": "as@mail.com",
+    "telp": "08976543212",
+    "role": "user",
+    "status": false
   }
 ]

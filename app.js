@@ -4,7 +4,8 @@ console.log('='.repeat(30))
 
 const user = require('./user')
 const fs = require('fs');
-const rl = require('./readline')
+// const rl = require('./readline')
+const yargs = require('./yargs')
 
 if (!fs.existsSync('users.json')) {
     fs.writeFileSync('users.json', JSON.stringify(user, null, 2))

@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/marwanhadiann/Bootcamp-Geeksfarm#readme",
   "dependencies": {
-    "validator": "^13.15.35"
+    "validator": "^13.15.35",
+    "yargs": "^18.1.0"
   }
 }
