@@ -10,6 +10,44 @@
 <body>
     <h1>User Management System</h1>
     <p>Berada di page user</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>No Telp</th>
+                <th>Role</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody id="userlist">
+
+        </tbody>
+    </table>
+
+    <script>
+        fetch('./user')
+            .then(response => response.json())
+            .then(users => {
+                const userList = document.getElementById('userlist')
+
+                users.forEach((user) => {
+                    const row = `
+                <tr>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.telp}</td>
+                    <td>${user.role}</td>
+                    <td>${user.status ? 'Active' : 'Inactive'}</td>
+                </tr>`
+
+                    userList.innerHTML += row
+                });
+
+            })
+    </script>
 </body>
 
 </html>
