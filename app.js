@@ -6,6 +6,7 @@ const user = require('./user')
 const fs = require('fs');
 // const rl = require('./readline')
 const yargs = require('./yargs')
+const express = require('./express')
 
 if (!fs.existsSync('users.json')) {
     fs.writeFileSync('users.json', JSON.stringify(user, null, 2))

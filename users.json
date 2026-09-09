@@ -33,5 +33,14 @@
     "telp": "08976543212",
     "role": "user",
     "status": false
+  },
+  {
+    "name": "budi",
+    "telp": "089765456721"
+  },
+  {
+    "name": "usdin",
+    "email": "masd@gmail.com",
+    "telp": "089765456721"
   }
 ]
