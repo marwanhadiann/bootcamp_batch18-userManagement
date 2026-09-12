@@ -1,15 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact</title>
+    <title>Contact Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-50 flex flex-col min-h-screen text-gray-800">
 
-<body>
-    <h1>User Management System</h1>
-    <p>Berada di page Contact</p>
+    <!-- Navbar -->
+    <nav class="bg-indigo-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/" class="text-xl font-bold tracking-wide">UserSystem</a>
+            <div class="space-x-4">
+                <a href="/" class="hover:text-indigo-200 font-medium">Home</a>
+                <a href="/users" class="hover:text-indigo-200 font-medium">Users Management</a>
+                <a href="/about" class="hover:text-indigo-200 font-medium">About</a>
+                <a href="/contact" class="hover:text-indigo-200 font-medium border-b-2 border-white pb-1">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-12">
+        <div class="bg-white rounded-xl shadow-md p-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6">Hubungi Kami</h1>
+            <div class="space-y-4 text-gray-600">
+                <p>Jika ada pertanyaan atau bantuan mengenai sistem ini, silakan hubungi tim kami melalui detail berikut:</p>
+                <div class="p-4 bg-gray-50 rounded-lg space-y-2">
+                    <p><strong class="text-gray-800">Email:</strong> support@usersystem.local</p>
+                    <p><strong class="text-gray-800">Telepon:</strong> +62 812-3456-7890</p>
+                    <p><strong class="text-gray-800">Alamat:</strong> Jl. Telekomunikasi No. 1, Bandung, Indonesia</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-6 text-center text-sm">
+        &copy; 2026 User Management System. All rights reserved.
+    </footer>
+
 </body>
-
 </html>

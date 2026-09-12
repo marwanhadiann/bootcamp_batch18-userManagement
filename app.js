@@ -1,6 +1,6 @@
-console.log('='.repeat(30));
-console.log('User Management System');
-console.log('='.repeat(30))
+// console.log('='.repeat(30));
+// console.log('User Management System');
+// console.log('='.repeat(30))
 
 const user = require('./user')
 const fs = require('fs');

@@ -1,14 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error</title>
+    <title>404 - Halaman Tidak Ditemukan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-50 flex flex-col min-h-screen text-gray-800">
 
-<body>
-    <h1>404 - <%= url %> Page not Found</h1>
+    <!-- Navbar -->
+    <nav class="bg-indigo-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/" class="text-xl font-bold tracking-wide">UserSystem</a>
+            <div class="space-x-4">
+                <a href="/" class="hover:text-indigo-200 font-medium">Home</a>
+                <a href="/users" class="hover:text-indigo-200 font-medium">Users Management</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex items-center justify-center container mx-auto px-4 py-12">
+        <div class="text-center max-w-md">
+            <h1 class="text-9xl font-extrabold text-indigo-600">404</h1>
+            <h2 class="text-2xl font-bold text-gray-900 mt-4">Halaman Tidak Ditemukan</h2>
+            <p class="text-gray-600 mt-2">Maaf, URL <span class="text-red-500 font-mono bg-red-50 px-2 py-0.5 rounded"><%= url %></span> tidak dapat ditemukan di server kami.</p>
+            <div class="mt-6">
+                <a href="/" class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition inline-block">Kembali ke Beranda</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-6 text-center text-sm">
+        &copy; 2026 User Management System. All rights reserved.
+    </footer>
+
 </body>
-
 </html>

@@ -1,6 +1,9 @@
 const express = require('express');
 const fs = require('fs');
 const { validateName, validateTelp, validateEmail } = require('./validator')
+const { getUser, createUser, getEditUsers, updateUsers, deleteUsers } = require('./database');
+const { error } = require('console');
+const methodOverride = require('method-override')
 
 const app = express();
 
@@ -10,14 +13,18 @@ function logger(req, res, next) {
 }
 
 app.use(logger)
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+app.use(methodOverride('_method'))
+app.set('view engine', 'ejs')
 
 const validateUsers = (req, res, next) => {
-    const name = req.query.name
-    const phone = req.query.phone
-    const email = req.query.email
+    const name = req.body.name
+    const phone = req.body.phone
+    const email = req.body.email
 
     if (!name || !phone) {
-        return res.status(400).send('Name and Phone required')
+        return res.status(400).send('Name and Phone wajib diisi')
     }
 
     const nameValidate = validateName(name)
@@ -39,46 +46,117 @@ const validateUsers = (req, res, next) => {
 
     next()
 }
-app.get('/addusers', validateUsers, (req, res) => {
-    const { name, phone, email = undefined } = req.query
-
-    const data = fs.readFileSync('users.json', 'utf-8')
-    const parsedUsers = JSON.parse(data)
-    const newData = {
-        name: name,
-        email: email,
-        telp: phone
-    }
-
-    // console.log(`data sebelum ${parsedUsers}`)
-
-    parsedUsers.push(newData)
-
-    fs.writeFileSync('users.json', JSON.stringify(parsedUsers, null, 2))
-
-    // console.log(`data sesudah ${parsedUsers}`)
-    return res.status(201).send('User Succesfully Created')
+app.get('/users/add', (req, res) => {
+    res.render('addusers', { error: null })
 })
 
-app.set('view engine', 'ejs')
+app.post('/users', validateUsers, async (req, res) => {
+    try {
+        const {
+            name,
+            email,
+            phone,
+            role,
+            status
+        } = req.body
+
+        await createUser(
+            name,
+            email,
+            phone,
+            role,
+            status
+        )
+
+        res.redirect('/users')
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send('Database Error')
+    }
+})
+
+app.get('/users/:id/edit', async (req, res) => {
+    try {
+        const id = req.params.id;
+        const user = await getEditUsers(id)
+
+        if (!user) {
+            return res.status(400).send('User tidak ditemukan')
+        }
+
+        res.render('editusers', { user })
+    } catch (error) {
+        console.error(error)
+        res.status(500).send('Database Error')
+    }
+})
+
+app.post('/users/:id/edit', validateUsers, async (req, res) => {
+    try {
+        const id = req.params.id
+        const {
+            name,
+            email,
+            phone,
+            role,
+            status
+        } = req.body
+
+        await updateUsers(
+            id,
+            name,
+            email,
+            phone,
+            role,
+            status
+        )
+
+        res.redirect('/users')
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send('Database Error')
+    }
+})
+
+app.delete('/users/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const deletedUser = await deleteUsers(id)
+
+        if (!deletedUser) {
+            return res.status(400).send('Data user tidak ditemukan')
+        }
+
+        res.redirect('/users')
+
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).send('Database Error')
+    }
+})
 
 app.get('/', (req, res) => {
-    res.send('Users Management System')
+    res.render('homepage')
 })
 
 
-app.get('/users', (req, res) => {
-    const data = fs.readFileSync('users.json', 'utf-8')
-    const users = JSON.parse(data)
-    res.render('users', { users })
+app.get('/users', async (req, res) => {
+    try {
+        const users = await getUser()
+        res.render('users', { users })
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Database Error')
+    }
+
 })
 
 app.get('/contact', (req, res,) => {
-    res.send('Users Management System - Contact')
+    res.render('contact')
 })
 
 app.get('/about', (req, res,) => {
-    res.send('Users Management System - About')
+    res.render('about')
 })
 
 app.use((req, res) => {
@@ -91,4 +169,4 @@ app.listen(3000, () => {
 })
 
 
-// module.export = app
+module.exports = app

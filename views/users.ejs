@@ -1,37 +1,98 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users</title>
+    <title>Daftar Users</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-gray-50 flex flex-col min-h-screen text-gray-800">
 
-<body>
-    <h1>User Management System</h1>
+    <!-- Navbar -->
+    <nav class="bg-indigo-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/" class="text-xl font-bold tracking-wide">UserSystem</a>
+            <div class="space-x-4">
+                <a href="/" class="hover:text-indigo-200 font-medium">Home</a>
+                <a href="/users" class="hover:text-indigo-200 font-medium border-b-2 border-white pb-1">Users Management</a>
+                <a href="/about" class="hover:text-indigo-200 font-medium">About</a>
+                <a href="/contact" class="hover:text-indigo-200 font-medium">Contact</a>
+            </div>
+        </div>
+    </nav>
 
-    <h2>List Users</h2>
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">User Management System</h1>
+                <p class="text-gray-600 text-sm mt-1">Daftar pengguna yang terdaftar dalam sistem.</p>
+            </div>
+            <a href="/users/add" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-4 py-2 rounded-lg shadow transition flex items-center gap-2">
+                <span>+</span> Tambah User
+            </a>
+        </div>
 
-    <% users.forEach( user=> { %>
-        <ul>
-            <li> Name :
-                <%= user.name %>
-            </li>
-            <li> Email :
-                <%= user.email %>
-            </li>
-            <li> No Telp :
-                <%= user.telp %>
-            </li>
-            <li> Role :
-                <%= user.role %>
-            </li>
-            <li> Status :
-                <%= user.status %>
-            </li>
-        </ul>
-        <% }) %>
+        <!-- Tabel User -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-100 border-b border-gray-200 text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <tr>
+                            <th class="py-3 px-6">Nama</th>
+                            <th class="py-3 px-6">Email</th>
+                            <th class="py-3 px-6">No Telp</th>
+                            <th class="py-3 px-6">Role</th>
+                            <th class="py-3 px-6">Status</th>
+                            <th class="py-3 px-6 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 text-sm">
+                        <% if (users.length === 0) { %>
+                            <tr>
+                                <td colspan="6" class="py-6 text-center text-gray-500">Belum ada data user.</td>
+                            </tr>
+                        <% } else { %>
+                            <% users.forEach(user => { %>
+                                <tr class="hover:bg-gray-50 transition">
+                                    <td class="py-4 px-6 font-semibold text-gray-900"><%= user.name %></td>
+                                    <td class="py-4 px-6 text-gray-600"><%= user.email || '-' %></td>
+                                    <td class="py-4 px-6 text-gray-600"><%= user.phone %></td>
+                                    <td class="py-4 px-6">
+                                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full <%= user.role === 'admin' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700' %>">
+                                            <%= user.role %>
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-6">
+                                        <% const isAktif = user.status && user.status.trim().toLowerCase() === 'aktif'; %>
+                                        <span class="px-2.5 py-1 text-xs font-semibold rounded-full <%= isAktif ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %>">
+                                            <%= isAktif ? 'Aktif' : 'Non-Aktif' %>
+                                        </span>
+                                    </td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex justify-center items-center space-x-2">
+                                            <a href="/users/<%= user.id %>/edit" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1.5 rounded transition font-medium">
+                                                Edit
+                                            </a>
+                                            <form action="/users/<%= user.id %>?_method=DELETE" method="post" class="inline">
+                                                <button type="submit" onclick="return confirm('Apakah anda yakin ingin menghapus data <%= user.name %>?')" class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded transition font-medium">
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }) %>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 py-6 text-center text-sm">
+        &copy; 2026 User Management System. All rights reserved.
+    </footer>
 
 </body>
-
 </html>
