@@ -38,6 +38,7 @@
                 <table class="w-full text-left border-collapse">
                     <thead class="bg-gray-100 border-b border-gray-200 text-xs font-semibold uppercase tracking-wider text-gray-600">
                         <tr>
+                            <th class="py-3 px-6">Nomor</th>
                             <th class="py-3 px-6">Nama</th>
                             <th class="py-3 px-6">Email</th>
                             <th class="py-3 px-6">No Telp</th>
@@ -52,8 +53,9 @@
                                 <td colspan="6" class="py-6 text-center text-gray-500">Belum ada data user.</td>
                             </tr>
                         <% } else { %>
-                            <% users.forEach(user => { %>
+                            <% users.forEach((user, index) => { %>
                                 <tr class="hover:bg-gray-50 transition">
+                                    <td class="py-4 px-6 font-semibold text-gray-900"><%= index + 1 %></td>
                                     <td class="py-4 px-6 font-semibold text-gray-900"><%= user.name %></td>
                                     <td class="py-4 px-6 text-gray-600"><%= user.email || '-' %></td>
                                     <td class="py-4 px-6 text-gray-600"><%= user.phone %></td>
