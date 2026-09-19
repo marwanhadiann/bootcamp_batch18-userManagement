@@ -16,7 +16,7 @@ async function createUser(name, email, phone, role, status) {
         VALUES ($1, $2, $3, $4, $5)
         RETURNING *`,
         [name, email, phone, role, status])
-    console.log('eror')
+    console.log('Data Berhasil ditambahkan')
     return result.rows[0]
 }
 
@@ -46,10 +46,19 @@ async function deleteUsers(id) {
     return result.rows[0]
 }
 
+async function isNameExist(name) {
+    const result = await pool.query(
+        `SELECT id FROM users WHERE LOWER(TRIM(name)) = LOWER(TRIM($1))`,
+        [name]
+    )
+    return result.rows.length > 0
+}
+
 module.exports = {
     getUser,
     createUser,
     getEditUsers,
     updateUsers,
-    deleteUsers
+    deleteUsers,
+    isNameExist
 }

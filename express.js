@@ -1,11 +1,14 @@
 const express = require('express');
 const fs = require('fs');
-const { validateName, validateTelp, validateEmail } = require('./validator')
-const { getUser, createUser, getEditUsers, updateUsers, deleteUsers } = require('./database');
-const { error } = require('console');
+const { validateTelp, validateEmail } = require('./validator')
+const { getUser, createUser, getEditUsers, updateUsers, deleteUsers, isNameExist } = require('./database');
+// const { error, assert } = require('console');
 const methodOverride = require('method-override')
 
 const app = express();
+const cors = require('cors');
+const { error } = require('console');
+app.use(cors())
 
 function logger(req, res, next) {
     console.log(`[${req.method}]`, req.url);
@@ -18,34 +21,138 @@ app.use(express.json())
 app.use(methodOverride('_method'))
 app.set('view engine', 'ejs')
 
-const validateUsers = (req, res, next) => {
-    const name = req.body.name
-    const phone = req.body.phone
-    const email = req.body.email
+const validateUsers = async (req, res, next) => {
+    try {
 
-    if (!name || !phone) {
-        return res.status(400).send('Name and Phone wajib diisi')
-    }
-
-    const nameValidate = validateName(name)
-    if (!nameValidate.isValid) {
-        return res.status(400).send(nameValidate.message)
-    }
-
-    const phoneValidate = validateTelp(phone)
-    if (!phoneValidate.isValid) {
-        return res.status(400).send(phoneValidate.message)
-    }
-
-    if (email != undefined) {
-        const emailValidate = validateEmail(email)
-        if (!emailValidate.isValid) {
-            return res.status(400).send(emailValidate.message)
+        const { name, phone, email, role, status } = req.body
+        if (!name || !name.trim()) {
+            return res.status(400).json({
+                field: 'name',
+                message: 'Nama wajib diisi'
+            })
         }
+
+
+
+        if (!phone || !phone.trim()) {
+            return res.status(400).json({
+                field: 'phone',
+                message: 'Phone wajib diisi'
+            })
+        }
+
+        if (!role || !role.trim()) {
+            return res.status(400).json({
+                field: 'role',
+                message: 'Role wajib dipilih'
+            })
+        }
+
+        if (!status || !status.trim()) {
+            return res.status(400).json({
+                field: 'status',
+                message: 'Status wajib dipilih'
+            })
+        }
+
+        const nameExist = await isNameExist(name)
+        if (nameExist) {
+            return res.status(400).json({
+                field: 'name',
+                message: 'Nama sudah digunakan'
+            })
+        }
+
+        const phoneValidate = validateTelp(phone)
+        if (!phoneValidate.isValid) {
+            return res.status(400).json({
+                field: 'phone',
+                message: phoneValidate.message
+            })
+        }
+
+        if (email && email.trim()) {
+            const emailValidate = validateEmail(email)
+            if (!emailValidate.isValid) {
+                return res.status(400).json({
+                    field: 'email',
+                    message: emailValidate.message
+                })
+            }
+        }
+
+
+        if (status !== 'true' && status !== 'false') {
+            return res.status(400).json({
+                field: 'status',
+                message: 'Status wajib diisi'
+            })
+        }
+
+        next()
+    } catch (error) {
+        console.error(error)
+
+        res.status(500).json({
+            field: 'general',
+            message: 'Terjadi kesalahan saat melakukan validasi'
+        })
+    }
+}
+
+app.get('/api/users', async (req, res) => {
+    try {
+        const users = await getUser()
+        res.json(users)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            message: 'database eror'
+        })
+    }
+})
+
+app.post('/api/users', validateUsers, async (req, res) => {
+    try {
+
+        // console.log('data dari react:', req.body)
+        const {
+            name,
+            email,
+            phone,
+            role,
+            status
+        } = req.body
+
+        const statusBoolean = status === 'true'
+        const emailValue = email?.trim() || null
+
+        console.log('email dari react: ', email)
+        console.log('email dikirim ke database : ', emailValue)
+
+        // console.log('data yg masuk ke db: ', {
+        //     name, email, phone, role, statusBoolean
+        // })
+
+        const newUser = await createUser(
+            name,
+            emailValue,
+            phone,
+            role,
+            statusBoolean
+        )
+
+        // console.log('hasil insert : ', newUser)
+        res.status(201).json(newUser)
+    } catch (error) {
+        console.log(error.message)
+        res.status(500).json({
+            message: 'database eror'
+        })
     }
 
-    next()
-}
+})
+
 app.get('/users/add', (req, res) => {
     res.render('addusers', { error: null })
 })
@@ -91,7 +198,7 @@ app.get('/users/:id/edit', async (req, res) => {
     }
 })
 
-app.post('/users/:id/edit', validateUsers, async (req, res) => {
+app.post('/users/:id/edit', async (req, res) => {
     try {
         const id = req.params.id
         const {
@@ -140,16 +247,6 @@ app.get('/', (req, res) => {
 })
 
 
-app.get('/users', async (req, res) => {
-    try {
-        const users = await getUser()
-        res.render('users', { users })
-    } catch (error) {
-        console.log(error)
-        res.status(500).send('Database Error')
-    }
-
-})
 
 app.get('/contact', (req, res,) => {
     res.render('contact')
