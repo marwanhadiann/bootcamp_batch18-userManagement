@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 function UserForm({ onClose, onAddUser }) {
     const [name, setName] = useState('')
@@ -21,30 +22,22 @@ function UserForm({ onClose, onAddUser }) {
         }
 
         try {
-            const res = await fetch('http://localhost:3000/api/users', {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newUser)
-            })
-
-            const data = await res.json()
-
-            if (!res.ok) {
-                setError({
-                    [data.field]: data.message
-                })
-                return
-            }
-            onAddUser(data)
+            const res = await axios.post('http://localhost:3000/api/users', newUser)
+            onAddUser(res.data)
             onClose()
         } catch (error) {
             console.error(error)
 
-            setError({
-                general: 'terjadi kesalahan pada server'
-            })
+            if (error.response && error.response.data) {
+                const responseData = error.response.data
+                setError({
+                    [responseData.field]: responseData.message
+                })
+            } else {
+                setError({
+                    general: 'terjadi kesalahan pada server'
+                })
+            }
         }
 
     }

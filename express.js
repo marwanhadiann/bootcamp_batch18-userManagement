@@ -32,8 +32,6 @@ const validateUsers = async (req, res, next) => {
             })
         }
 
-
-
         if (!phone || !phone.trim()) {
             return res.status(400).json({
                 field: 'phone',
@@ -127,8 +125,8 @@ app.post('/api/users', validateUsers, async (req, res) => {
         const statusBoolean = status === 'true'
         const emailValue = email?.trim() || null
 
-        console.log('email dari react: ', email)
-        console.log('email dikirim ke database : ', emailValue)
+        // console.log('email dari react: ', email)
+        // console.log('email dikirim ke database : ', emailValue)
 
         // console.log('data yg masuk ke db: ', {
         //     name, email, phone, role, statusBoolean
