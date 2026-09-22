@@ -100,7 +100,19 @@ const validateUsers = async (req, res, next) => {
 
 app.get('/api/users', async (req, res) => {
     try {
-        const users = await getUser()
+        const search = req.query.search || ''
+        const users = await getUser(search)
+
+        console.log('query diterima backend: ', search)
+
+        if (search) {
+            const cleanSearch = search.trim().toLowerCase()
+            const filterUser = users.filter((user) =>
+                user && user.name && String(user.name).trim().toLowerCase().includes(cleanSearch)
+            )
+            console.log('hasil filter:', filterUser.length)
+            return res.json(filterUser)
+        }
         res.json(users)
     } catch (error) {
         console.log(error)
@@ -112,7 +124,6 @@ app.get('/api/users', async (req, res) => {
 
 app.post('/api/users', validateUsers, async (req, res) => {
     try {
-
         // console.log('data dari react:', req.body)
         const {
             name,

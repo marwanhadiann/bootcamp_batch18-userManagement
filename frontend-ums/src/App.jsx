@@ -5,26 +5,21 @@ import { useEffect } from "react";
 import DetailUsers from "./DetailUsers";
 import UserForm from "./Form";
 import SearchBar from "./SearchBar";
+import { useRef } from "react";
 
-// const user = {
-//   name: 'John Doe',
-//   email: 'john@example.com'
-// };
 
 function App() {
   const [users, setUsers] = useState([])
   const [selectUser, setSelectUser] = useState(null)
 
   const [show, setShow] = useState(false)
-  const [search, setSearch] = useState('')
 
-  const handleAddUser = (newUser) => {
-    setUsers((prevUser) => [newUser, ...prevUser])
-  }
+  const inputRef = useRef(null)
+  const timerRef = useRef(null)
 
-  useEffect(() => {
+  const fetchUsers = (query = '') => {
     axios
-      .get('http://localhost:3000/api/users')
+      .get(`http://localhost:3000/api/users?search=${encodeURIComponent(query)}`)
       .then((res) => {
         console.log('data dari backend: ', res.data)
         setUsers(res.data)
@@ -32,14 +27,28 @@ function App() {
       .catch((error) => {
         console.error('error fetching user', error)
       })
+  }
+
+  useEffect(() => {
+    fetchUsers()
   }, [])
 
-  const filterUsers = users.filter((user) => {
-    if (!search || !search.trim()) return true
-    const cleanSearch = search.trim().toLowerCase()
-    const userName = user && user.name ? String(user.name).trim().toLowerCase() : ''
-    return userName.includes(cleanSearch)
-  })
+  const handleSearch = () => {
+    const query = inputRef.current ? inputRef.current.value : ''
+
+    if (timerRef.current) {
+      clearTimeout(timerRef.current)
+    }
+
+    timerRef.current = setTimeout(() => {
+      console.log('mengirim query ke be :', query)
+      fetchUsers(query)
+    }, 300);
+  }
+
+  const handleAddUser = (newUser) => {
+    setUsers((prevUser) => [newUser, ...prevUser])
+  }
 
   return (
     <div className="w-250 justify-self-center">
@@ -47,7 +56,7 @@ function App() {
       <p className="text-center">total user: <span className="font-semibold underline"> {users.length} </span>
       </p>
 
-      <SearchBar search={search} setSearch={setSearch} />
+      <SearchBar inputRef={inputRef} onSearch={handleSearch} />
 
       <button
         onClick={() => setShow(true)}
@@ -55,16 +64,15 @@ function App() {
 
 
       <div className="grid grid-cols-3 justify-center gap-6">
-        {filterUsers.length > 0 ? (
-
-          filterUsers.map((user) => (
+        {users.length > 0 ? (
+          users.map((user) => (
             <UserCard
               user={user}
               key={user.id}
               onDetail={() => setSelectUser(user)} />
           ))) : (
           <p className="col-span-3 text-center text-gray-500 py-4">
-            User dengan nama "{search}" tidak ditemukan.
+            User tidak ditemukan.
           </p>
         )}
       </div>

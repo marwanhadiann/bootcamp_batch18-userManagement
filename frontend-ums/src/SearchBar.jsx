@@ -1,12 +1,12 @@
 
-function SearchBar({ search, setSearch }) {
+function SearchBar({ inputRef, onSearch }) {
     return (
         <div className="my-4 max-w-md mx-auto">
             <div className="relative">
                 <input
+                    ref={inputRef}
                     type="text"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={onSearch}
                     placeholder="Cari user berdasarkan nama"
                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                 />

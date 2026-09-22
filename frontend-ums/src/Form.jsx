@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import { useRef } from "react";
+import { useEffect } from "react";
 
 function UserForm({ onClose, onAddUser }) {
     const [name, setName] = useState('')
@@ -8,6 +10,11 @@ function UserForm({ onClose, onAddUser }) {
     const [role, setRole] = useState('')
     const [status, setStatus] = useState('')
     const [error, setError] = useState({})
+
+    const inputName = useRef(null)
+    useEffect(() => {
+        inputName.current.focus()
+    }, [])
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -64,6 +71,7 @@ function UserForm({ onClose, onAddUser }) {
                     </label>
 
                     <input
+                        ref={inputName}
                         id="name"
                         className={`border rounded-lg w-full p-2 ${error.name ? 'border-red-600' : ''}`}
                         type="text"
