@@ -1,7 +1,3 @@
-// import { useEffect } from "react"
-// import { useState } from "react"
-// import { response } from "../../express"
-
 function UserCard({ user, onDetail }) {
 
 
