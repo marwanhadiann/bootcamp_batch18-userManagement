@@ -6,12 +6,12 @@ import DetailUsers from "./DetailUsers";
 import UserForm from "./Form";
 import SearchBar from "./SearchBar";
 import { useRef } from "react";
+import Clock from "./Clock";
 
 
 function App() {
   const [users, setUsers] = useState([])
   const [selectUser, setSelectUser] = useState(null)
-
   const [show, setShow] = useState(false)
 
   const inputRef = useRef(null)
@@ -43,7 +43,7 @@ function App() {
     timerRef.current = setTimeout(() => {
       console.log('mengirim query ke be :', query)
       fetchUsers(query)
-    }, 300);
+    }, 500);
   }
 
   const handleAddUser = (newUser) => {
@@ -55,6 +55,9 @@ function App() {
       <h1 className="text-3xl font-bold text-center m-5">User Management System</h1>
       <p className="text-center">total user: <span className="font-semibold underline"> {users.length} </span>
       </p>
+      <div className="border w-15 rounded-md bg-green-200">
+        <Clock />
+      </div>
 
       <SearchBar inputRef={inputRef} onSearch={handleSearch} />
 
