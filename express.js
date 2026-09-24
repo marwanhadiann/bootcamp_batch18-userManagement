@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const { validateTelp, validateEmail } = require('./validator')
-const { getUser, createUser, getEditUsers, updateUsers, deleteUsers, isNameExist } = require('./database');
+const { getUser, createUser, getEditUsers, updateUsers, deleteUsers, isNameExist, getUsersPagination, getUsersCount } = require('./database');
 // const { error, assert } = require('console');
 const methodOverride = require('method-override')
 
@@ -100,20 +100,25 @@ const validateUsers = async (req, res, next) => {
 
 app.get('/api/users', async (req, res) => {
     try {
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 6
         const search = req.query.search || ''
-        const users = await getUser(search)
+        const offset = (page - 1) * limit
+        const users = await getUsersPagination(search, limit, offset)
 
-        console.log('query diterima backend: ', search)
+        const totalUsers = await getUsersCount(search)
+        const totalPage = Math.ceil(totalUsers / limit)
 
-        if (search) {
-            const cleanSearch = search.trim().toLowerCase()
-            const filterUser = users.filter((user) =>
-                user && user.name && String(user.name).trim().toLowerCase().includes(cleanSearch)
-            )
-            console.log('hasil filter:', filterUser.length)
-            return res.json(filterUser)
-        }
-        res.json(users)
+        res.json({
+            data: users,
+            pagination: {
+                currentPage: page,
+                limit: limit,
+                totalUsers: totalUsers,
+                totalPage: totalPage
+            }
+        })
+
     } catch (error) {
         console.log(error)
         res.status(500).json({

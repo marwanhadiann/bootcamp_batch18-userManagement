@@ -10,6 +10,25 @@ async function getUser() {
     return result.rows
 }
 
+async function getUsersPagination(search = '', limit = 6, offset = 0) {
+    const result = await pool.query(`
+        SELECT * FROM users
+        WHERE name ILIKE $1
+        ORDER BY id DESC
+        LIMIT $2 OFFSET $3
+        `, [`%${search}%`, limit, offset])
+    return result.rows
+}
+
+async function getUsersCount(search = '') {
+    const result = await pool.query(`
+        SELECT COUNT(*)
+        FROM users
+        WHERE name ILIKE $1
+        `, [`%${search}%`])
+    return parseInt(result.rows[0].count)
+}
+
 async function createUser(name, email, phone, role, status) {
     const result = await pool.query(`
         INSERT INTO users (name, email, phone, role, status)
@@ -56,6 +75,8 @@ async function isNameExist(name) {
 
 module.exports = {
     getUser,
+    getUsersPagination,
+    getUsersCount,
     createUser,
     getEditUsers,
     updateUsers,
