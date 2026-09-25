@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 import { store } from './store/store.js'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Home from './Home.jsx'
+import Counter from './Counter.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,6 +16,7 @@ createRoot(document.getElementById('root')).render(
         <Routes>
           <Route path='/home' element={<Home />} />
           <Route path='/' element={<App />} />
+          <Route path='/counter' element={<Counter />} />
         </Routes>
       </BrowserRouter>
     </Provider>
